@@ -17,8 +17,15 @@
     <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="src\collections\Dictionary.ts" />
+    <TypeScriptCompile Include="src\collections\ReadOnlyCollection.ts" />
+    <TypeScriptCompile Include="src\collections\IEnumerable.ts" />
     <TypeScriptCompile Include="src\collections\List.ts" />
     <TypeScriptCompile Include="src\events\Event.ts" />
+    <TypeScriptCompile Include="src\events\EventArgs.ts" />
+    <TypeScriptCompile Include="src\events\EventHandler.ts" />
+    <TypeScriptCompile Include="src\events\IEvent.ts" />
+    <TypeScriptCompile Include="src\utils\StringUtils.ts" />
     <TypeScriptCompile Include="src\System.ts" />
   </ItemGroup>
   <ItemGroup>

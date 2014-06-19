@@ -1,4 +1,4 @@
-﻿/*
+/*
  * systemts
  * Author: Kaspar Fenner
  * Licensed under the MIT License
@@ -8,83 +8,14 @@
 module system.collections {
 
     /**
-     * Represents a strongly typed list of objects that can be accessed by index.
+     * Represents a generic read-only collection, normally used to to perform all sorts of actions and data queries on a standard array.
+     * Read-only means no elements can be added or removed from the collection. The underlaying elements are not read-only.
      */
-    export class List<TSource> implements IEnumerable<TSource> {
-        private container: Array<TSource> = new Array<TSource>();
-        private readonly: ReadOnlyCollection<TSource> = new ReadOnlyCollection(this.container);
+    export class ReadOnlyCollection<TSource> implements IEnumerable<TSource> {
+        private arr: Array<TSource>;
 
-        /**
-         * Adds an object to the end of the list.
-         * @param item The object to be added to the end of the list.
-         */
-        public add(item: TSource): void {
-            this.container.push(item);
-        }
-
-        /**
-         * Adds the elements of the specified collection to the end of the list.
-         * @param collection The collection whose elements should be added to the end of the list.
-         */
-        public addRange(collection: IEnumerable<TSource>): void;
-        /**
-         * Adds the elements of the specified collection to the end of the list.
-         * @param collection The collection whose elements should be added to the end of the list.
-         */
-        public addRange(collection: Array<TSource>): void
-        // Actual implementation
-        public addRange(collection: any): void {
-            (<IEnumerable<TSource>>collection).each((v) => this.add(v));
-        }
-
-        /**
-         * Returns the element at the specified position.
-         */
-        public at(index: number): TSource {
-            return this.container[index];
-        }
-
-        /**
-         * Returns the index of the first occurence of the specified item in the list.
-         * Returns -1 if the value is not found.
-         */
-        public indexOf(item: TSource): number {
-            return this.container.indexOf(item);
-        }
-
-        /**
-         * Replaces the element at the specified position in this list with the specified element.
-         */
-        public put(index: number, item: TSource): void {
-            this.container[index] = item;
-        }
-
-        /**
-         * Removes the first occurence of the item in the list.
-         */
-        public remove(item: TSource): void {
-            var i;
-            if ((i = this.container.indexOf(item)) !== -1) {
-                this.container.splice(i, 1);
-            }
-        }
-
-        /**
-         * Removes all instances of the specified item.
-         */
-        public removeAll(item: TSource): void {
-            var i;
-            while ((i = this.container.indexOf(item)) !== -1) {
-                this.container.splice(i, 1);
-            }
-        }
-
-        /**
-         * Removes the element at the specified position in the list and returns it.
-         * @returns The removed item.
-         */
-        public removeAt(index: number): TSource {
-            return this.container.splice(index, 1)[0];
+        constructor(source?: Array<TSource>) {
+            this.arr = source ? source : [];
         }
 
         /**
@@ -93,23 +24,30 @@ module system.collections {
          * @returns true if every element of the sequence passes the test in the specified predicate, or if the sequence is empty; otherwise, false.
          */
         public all(predicate: (element: TSource) => boolean): boolean {
-            return this.readonly.all(predicate);
+            var result = true;
+            this.until((ele) => {
+                if (!predicate(ele)) {
+                    result = false;
+                    return false;
+                }
+            });
+            return result;
         }
-
+        
         /**
          * Determines whether any element of a sequence satisfies a condition.
          * @param predicate A function to test each element for a condition.
          * @returns true if any elements in the sequence pass the test in the specified predicate; otherwise, false.
          */
         public any(predicate: (element: TSource) => boolean): boolean {
-            return this.readonly.any(predicate);
-        }
-
-        /**
-         * Removes all elements from the List<T>.
-         */
-        public clear(): void {
-            this.container.length = 0;
+            var result = false;
+            this.until((ele) => {
+                if (predicate(ele)) {
+                    result = true;
+                    return false;
+                }
+            });
+            return result;
         }
 
         /**
@@ -117,7 +55,7 @@ module system.collections {
          * @param action The action to perform on each element of the list.
          */
         public each(action: (value: TSource, index?: number) => void): void {
-            this.readonly.each(action);
+            this.arr.forEach(action);
         }
 
         /**
@@ -133,7 +71,19 @@ module system.collections {
         public first(predicate: (element: TSource) => boolean): TSource;
         // Actual implementation
         public first(predicate?: (element: TSource) => boolean): TSource {
-            return this.readonly.first(predicate);
+            if (predicate) {
+                var result: TSource;
+                this.until((ele) => {
+                    if (predicate(ele)) {
+                        result = ele;
+                        return false;
+                    }
+                });
+                return result;
+            }
+            else {
+                return this.arr[0];
+            }
         }
 
         /**
@@ -141,7 +91,11 @@ module system.collections {
          * @param action The action to perform on each element of the list until it returns false.
          */
         public fromLastUntil(action: (value: TSource, index?: number) => any): void {
-            this.readonly.fromLastUntil(action);
+            for (var i = this.arr.length -1; i >= 0; i -= 1) {
+                if (action(this.arr[i], i) === false) {
+                    return;
+                }
+            }
         }
 
         /**
@@ -157,7 +111,19 @@ module system.collections {
         public last(predicate: (element: TSource) => boolean): TSource;
         // Actual implementation
         public last(predicate?: (element: TSource) => boolean): TSource {
-            return undefined;
+            if (predicate) {
+                var result: TSource;
+                this.fromLastUntil((ele) => {
+                    if (predicate(ele)) {
+                        result = ele;
+                        return false;
+                    }
+                });
+                return result;
+            }
+            else {
+                return this.arr[this.arr.length - 1];
+            }
         }
 
         /**
@@ -165,7 +131,7 @@ module system.collections {
          * @returns The number of elements in the sequence.
          */
         public length(): number {
-            return this.container.length;
+            return this.arr.length;
         }
 
         /**
@@ -173,7 +139,7 @@ module system.collections {
          * @returns A sequence whose elements correspond to those of the input sequence in reverse order.
          */
         public reverse(): IEnumerable<TSource> {
-            return this.readonly.reverse();
+            return new ReadOnlyCollection(this.arr.reverse());
         }
 
         /**
@@ -182,7 +148,7 @@ module system.collections {
          * @returns An IEnumerable<TResult> whose elements are the result of invoking the transform function on each element of source.
          */
         public select<TResult>(selector: (element: TSource) => TResult): IEnumerable<TResult> {
-            return this.readonly.select(selector);;
+            return new ReadOnlyCollection(this.arr.map(selector));
         }
 
         /**
@@ -190,7 +156,7 @@ module system.collections {
          * @returns An array that contains the elements from the input sequence.
          */
         public toArray(): Array<TSource> {
-            return this.container;
+            return this.arr;
         }
 
         /**
@@ -198,7 +164,11 @@ module system.collections {
          * @param action The action to perform on each element of the list until it returns false.
          */
         public until(action: (value: TSource, index?: number) => any): void {
-            this.readonly.until(action);
+            for (var i = 0; i < this.arr.length; i += 1) {
+                if (action(this.arr[i], i) === false) {
+                    return;
+                }
+            }
         }
 
         /**
@@ -207,7 +177,7 @@ module system.collections {
          * @returns An IEnumerable<TSource> that contains elements from the input sequence that satisfy the condition.
          */
         public where(predicate: (element: TSource) => boolean): IEnumerable<TSource> {
-            return this.readonly.where(predicate);
+            return new ReadOnlyCollection(this.arr.filter(predicate));
         }
 
         /**
@@ -217,7 +187,8 @@ module system.collections {
          * @returns An IEnumerable<TResult> that contains merged elements
          */
         public zip<TResult, TSecond>(collection: IEnumerable<TSecond>, resultSelector: (first: TSource, second: TSecond) => TResult): IEnumerable<TResult> {
-            return this.readonly.zip(collection, resultSelector);
+            // TODO: Implement function
+            return undefined;
         }
     }
 }
