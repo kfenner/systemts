@@ -1,8 +1,8 @@
 /*
- * systemts
- * Author: Kaspar Fenner
- * Licensed under the MIT License
- * http://www.opensource.org/licenses/mit-license.php
+ * SYSTEM.TS
+ * Copyright ©2014 Kaspar Fenner
+ * spdx:MIT
+ * https://spdx.org/licenses/MIT
  */
 
 module system.collections {
@@ -33,7 +33,7 @@ module system.collections {
             });
             return result;
         }
-        
+
         /**
          * Determines whether any element of a sequence satisfies a condition.
          * @param predicate A function to test each element for a condition.
@@ -63,12 +63,14 @@ module system.collections {
          * @returns The first element in the sequence.
          */
         public first(): TSource;
+
         /**
          * Returns the first element in a sequence that satisfies a specified condition.
          * @param predicate A function to test each element for a condition.
          * @returns The first element in the sequence that passes the test in the specified predicate function.
          */
         public first(predicate: (element: TSource) => boolean): TSource;
+
         // Actual implementation
         public first(predicate?: (element: TSource) => boolean): TSource {
             if (predicate) {
@@ -87,11 +89,40 @@ module system.collections {
         }
 
         /**
+         * Returns the first element of a sequence or a default value if the sequence contains no elements.
+         * @returns The first element in the sequence or a default value if the sequence is empty.
+         */
+        public firstOrDefault(defaultValue: TSource): TSource;
+
+        /**
+         * Returns the first element of a sequence that satisfies a specified condition or a default value if no such element is found.
+         * @returns The first element in the sequence or a default value if no such element is found.
+         */
+        public firstOrDefault(predicate: (element: TSource) => boolean, defaultValue: TSource): TSource;
+
+        // Actual implementation
+        public firstOrDefault(predicateOrDefaultValue: any, defaultValue?: TSource): TSource {
+            if (typeof defaultValue === "undefined") {
+                return this.isEmpty() ? predicateOrDefaultValue : this.arr[0];
+            }
+            else {
+                var result: TSource = defaultValue;
+                this.until((ele) => {
+                    if (predicateOrDefaultValue(ele)) {
+                        result = ele;
+                        return false;
+                    }
+                });
+                return result;
+            }
+        }
+
+        /**
          * Performs the specified action on each element of the collection starting with the last element until the specified action returns false.
          * @param action The action to perform on each element of the list until it returns false.
          */
         public fromLastUntil(action: (value: TSource, index?: number) => any): void {
-            for (var i = this.arr.length -1; i >= 0; i -= 1) {
+            for (var i = this.arr.length - 1; i >= 0; i -= 1) {
                 if (action(this.arr[i], i) === false) {
                     return;
                 }
@@ -99,16 +130,26 @@ module system.collections {
         }
 
         /**
+         * Returns whether the sequence contains elements.
+         * @returns True if the sequence contains no elements; Otherwise, false.
+         */
+        public isEmpty(): boolean {
+            return this.arr.length === 0;
+        }
+
+        /**
          * Returns the last element of a sequence.
          * @returns The last element in the sequence.
          */
         public last(): TSource;
+
         /**
          * Returns the last element in a sequence that satisfies a specified condition.
          * @param predicate A function to test each element for a condition.
          * @returns The last element in the sequence that passes the test in the specified predicate function.
          */
         public last(predicate: (element: TSource) => boolean): TSource;
+
         // Actual implementation
         public last(predicate?: (element: TSource) => boolean): TSource {
             if (predicate) {
@@ -123,6 +164,35 @@ module system.collections {
             }
             else {
                 return this.arr[this.arr.length - 1];
+            }
+        }
+
+        /**
+         * Returns the last element of a sequence or a default value if the sequence contains no elements.
+         * @returns The last element in the sequence or a default value if the sequence is empty.
+         */
+        public lastOrDefault(defaultValue: TSource): TSource;
+
+        /**
+         * Returns the last element of a sequence that satisfies a specified condition or a default value if no such element is found.
+         * @returns The last element in the sequence or a default value if no such element is found.
+         */
+        public lastOrDefault(predicate: (element: TSource) => boolean, defaultValue: TSource): TSource;
+
+        // Actual implementation
+        public lastOrDefault(predicateOrDefaultValue: any, defaultValue?: TSource): TSource {
+            if (typeof defaultValue === "undefined") {
+                return this.isEmpty() ? predicateOrDefaultValue : this.arr[this.arr.length - 1];
+            }
+            else {
+                var result: TSource = defaultValue;
+                this.fromLastUntil((ele) => {
+                    if (predicateOrDefaultValue(ele)) {
+                        result = ele;
+                        return false;
+                    }
+                });
+                return result;
             }
         }
 

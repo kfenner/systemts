@@ -1,11 +1,11 @@
 /*
- * systemts
- * Author: Kaspar Fenner
- * Licensed under the MIT License
- * http://www.opensource.org/licenses/mit-license.php
+ * SYSTEM.TS
+ * Copyright ©2014 Kaspar Fenner
+ * spdx:MIT
+ * https://spdx.org/licenses/MIT
  */
 
-module system.events {
+module system {
 
     /**
      * Represents an Event object which can be used to attach handlers in order to receive notifications when the event fires. 

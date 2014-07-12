@@ -1,8 +1,8 @@
 ﻿/*
- * systemts
- * Author: Kaspar Fenner
- * Licensed under the MIT License
- * http://www.opensource.org/licenses/mit-license.php
+ * SYSTEM.TS
+ * Copyright ©2014 Kaspar Fenner
+ * spdx:MIT
+ * https://spdx.org/licenses/MIT
  */
 
 /**

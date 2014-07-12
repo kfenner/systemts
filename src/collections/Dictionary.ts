@@ -1,11 +1,17 @@
 /*
- * systemts
- * Author: Kaspar Fenner
- * Licensed under the MIT License
- * http://www.opensource.org/licenses/mit-license.php
+ * SYSTEM.TS
+ * Copyright ©2014 Kaspar Fenner
+ * spdx:MIT
+ * https://spdx.org/licenses/MIT
  */
 
 module system.collections {
+
+    export class KeyValuePair<TKey, TValue> {
+
+        constructor(public key: TKey, public value: TValue) { }
+
+    }
 
     export class Dictionary<TKey, TValue> {
         private keys: List<TKey> = new List<TKey>();
@@ -43,8 +49,12 @@ module system.collections {
             }
         }
 
-        public exists(key: TKey): boolean {
+        public containsKey(key: TKey): boolean {
             return this.keys.indexOf(key) > -1;
+        }
+
+        public containsValue(value: TValue): boolean {
+            return this.values.indexOf(value) > -1;
         }
 
         public getKeys(): IEnumerable<TKey> {

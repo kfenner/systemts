@@ -18,6 +18,7 @@
   </PropertyGroup>
   <ItemGroup>
     <TypeScriptCompile Include="src\collections\Dictionary.ts" />
+    <TypeScriptCompile Include="src\collections\Queue.ts" />
     <TypeScriptCompile Include="src\collections\ReadOnlyCollection.ts" />
     <TypeScriptCompile Include="src\collections\IEnumerable.ts" />
     <TypeScriptCompile Include="src\collections\List.ts" />
@@ -31,6 +32,9 @@
   <ItemGroup>
     <Folder Include="build\" />
     <Folder Include="src\ui\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="README.md" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
