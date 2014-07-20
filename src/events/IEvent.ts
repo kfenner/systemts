@@ -1,6 +1,6 @@
 /*
  * SYSTEM.TS
- * Copyright ©2014 Kaspar Fenner
+ * Copyright (c) 2014 Kaspar Fenner
  * spdx:MIT
  * https://spdx.org/licenses/MIT
  */

@@ -1,6 +1,6 @@
-﻿/*
+/*
  * SYSTEM.TS
- * Copyright ©2014 Kaspar Fenner
+ * Copyright (c) 2014 Kaspar Fenner
  * spdx:MIT
  * https://spdx.org/licenses/MIT
  */
@@ -262,7 +262,7 @@ module system.collections {
          * @param resultSelector A function that specifies how to merge the elements of two input sequences.
          * @returns An IEnumerable<TResult> that contains merged elements
          */
-        public zip<TResult, TSecond>(collection: IEnumerable<TSecond>, resultSelector: (first: TSource, second: TSecond) => TResult): IEnumerable<TResult> {
+        public zip<TResult, TSecond>(collection: IEnumerable<TSecond>, resultSelector: (first: TSource, second: TSecond, index?: number) => TResult): IEnumerable<TResult> {
             return this.readonly.zip(collection, resultSelector);
         }
     }
