@@ -63,7 +63,7 @@ module system.collections {
         }
 
         /**
-         * Removes all elements from the List<T>.
+         * Removes all elements from the list.
          */
         public clear(): void {
             this.container.length = 0;

@@ -56,6 +56,14 @@ module system.collections {
         }
 
         /**
+         * Removes all elements from the dictionary.
+         */
+        public clear(): void {
+            this.keys.clear();
+            this.values.clear();
+        }
+
+        /**
          * Returns whether the key exists in the dictionary.
          * @returns True if the key exists; Otherwise, false.
          */

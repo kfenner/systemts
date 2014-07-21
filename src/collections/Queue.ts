@@ -33,7 +33,7 @@ module system.collections {
         }
 
         /**
-         * Removes all elements from the List<T>.
+         * Removes all elements from the queue.
          */
         public clear(): void {
             this.container.length = 0;
