@@ -51,11 +51,8 @@ module system.collections {
          * Removes and returns the object at the beginning of the queue.
          * @returns The object that is removed from the beginning of the queue.
          */
-        public dequeue(item: TSource): void {
-            var i;
-            if ((i = this.container.indexOf(item)) !== -1) {
-                this.container.splice(i, 1);
-            }
+        public dequeue(): TSource {
+            return (this.length() > 0) ? this.container.splice(0, 1)[0] : this.container[0] /*undefined*/;
         }
 
         /**
