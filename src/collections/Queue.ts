@@ -12,7 +12,11 @@ module system.collections {
      */
     export class Queue<TSource> implements IEnumerable<TSource> {
         private container: Array<TSource> = new Array<TSource>();
-        private readonly: ReadOnlyCollection<TSource> = new ReadOnlyCollection(this.container);
+        private readonly: ReadOnlyCollection<TSource>;
+
+        constructor() {
+            this.readonly = new ReadOnlyCollection(this.container);
+        }
 
         /**
          * Determines whether all elements of a sequence satisfy a condition.

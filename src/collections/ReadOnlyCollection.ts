@@ -15,7 +15,7 @@ module system.collections {
         private arr: Array<TSource>;
 
         constructor(source?: Array<TSource>) {
-            this.arr = source ? source : [];
+            this.arr = Array.isArray(source) ? source : [];
         }
 
         /**

@@ -12,7 +12,11 @@ module system.collections {
      */
     export class List<TSource> implements IEnumerable<TSource> {
         private container: Array<TSource> = new Array<TSource>();
-        private readonly: ReadOnlyCollection<TSource> = new ReadOnlyCollection(this.container);
+        private readonly: ReadOnlyCollection<TSource>;
+
+        constructor() {
+            this.readonly = new ReadOnlyCollection(this.container);
+        }
 
         /**
          * Adds an object to the end of the list.
@@ -28,13 +32,18 @@ module system.collections {
          */
         public addRange(collection: IEnumerable<TSource>): void;
         /**
-         * Adds the elements of the specified collection to the end of the list.
+         * Adds the elements of the specified array to the end of the list.
          * @param collection The collection whose elements should be added to the end of the list.
          */
         public addRange(collection: Array<TSource>): void
         // Actual implementation
         public addRange(collection: any): void {
-            (<IEnumerable<TSource>>collection).each((v) => this.add(v));
+            if (Array.isArray(collection)) {
+                (<Array<TSource>>collection).forEach((v) => this.add(v));
+            }
+            else {
+                (<IEnumerable<TSource>>collection).each((v) => this.add(v));
+            }
         }
 
         /**
